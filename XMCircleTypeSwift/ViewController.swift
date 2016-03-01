@@ -10,16 +10,19 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var circleTypeView: XMCircleTypeView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        circleTypeView.text = "XMCircleType allows you to display a circled text. It will take kerning into account."
+        circleTypeView.textAttributes = [NSFontAttributeName:UIFont(name: "AmericanTypewriter", size: 15)!]
+        circleTypeView.textAlignment = .Center;
+        circleTypeView.verticalTextAlignment = .Outside;
+        
+        circleTypeView.baseAngle = -CGFloat(M_PI_2)
+        circleTypeView.characterSpacing = 0.9;
+        
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
 }
 

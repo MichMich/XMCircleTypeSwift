@@ -82,7 +82,17 @@ enum XMCircleTypeVerticalAlignment {
             setNeedsDisplay()
         }
     }
-    
+
+	/**
+	*  Flip the text inside out.
+	**/
+	
+	@IBInspectable var flipped = false {
+		didSet {
+			setNeedsDisplay()
+		}
+	}
+	
     /**
      *  Show some visual guidelines.
      **/
@@ -142,11 +152,16 @@ enum XMCircleTypeVerticalAlignment {
             } else if (self.verticalTextAlignment == .Center) {
                 textRadius = textRadius - stringSize.height/2;
             }
+			
+			//If the text is flipped upside down, we need to make the radius bigger.
+			if flipped {
+				textRadius += stringSize.height
+			}
             
             //Calculate the angle per charater.
             let circumference:CGFloat = 2 * textRadius * CGFloat(M_PI);
-            let anglePerPixel:CGFloat = CGFloat(M_PI) * 2 / circumference * self.characterSpacing;
-            
+			let anglePerPixel:CGFloat = CGFloat(M_PI) * 2 / circumference * self.characterSpacing * ((flipped) ? -1 : 1);
+			
             //Set initial angle.
             var startAngle: CGFloat = 0
             if (self.textAlignment == .Right) {
@@ -192,7 +207,8 @@ enum XMCircleTypeVerticalAlignment {
                 //Save the current context and do the character rotation magic.
                 CGContextSaveGState(context);
                 CGContextTranslateCTM(context, characterPoint.x, characterPoint.y);
-                let textTransform = CGAffineTransformMakeRotation(angle + CGFloat(M_PI_2));
+				let flippedAngle:CGFloat = (flipped) ? CGFloat(M_PI) : 0
+                let textTransform = CGAffineTransformMakeRotation(angle + CGFloat(M_PI_2) + flippedAngle);
                 CGContextConcatCTM(context, textTransform);
                 CGContextTranslateCTM(context, -characterPoint.x, -characterPoint.y);
                 
